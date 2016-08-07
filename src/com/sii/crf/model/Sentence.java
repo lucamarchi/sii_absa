@@ -10,6 +10,12 @@ public class Sentence {
 	private String text;
 	private List<Opinion> opinions;
 	
+	public Sentence(){
+		this.setId(null);
+		this.setText(null);
+		this.setOpinions(null);
+	}
+	
 	public String getId() {
 		return this.id;
 	}

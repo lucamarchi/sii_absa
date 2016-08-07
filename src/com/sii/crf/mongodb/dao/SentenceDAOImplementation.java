@@ -56,12 +56,12 @@ public class SentenceDAOImplementation implements SentenceDAO {
 			opinionsDoc.add(opinion);
 		}
 		document.put("opinions", opinionsDoc);
-		try{
+	/*	try{
 			db.getCollection(DB_COLLECTION_NAME).insertOne(document);
 		} catch(Exception e) {
 			e.printStackTrace();
 			check = false;
-		}
+		} */
 		return check;
 	}
 	

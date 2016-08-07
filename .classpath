@@ -2,9 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="/Users/luca/Downloads/mongodb-driver-3.3.0.jar"/>
-	<classpathentry kind="lib" path="/Users/luca/Downloads/bson-3.3.0.jar"/>
-	<classpathentry kind="lib" path="/Users/luca/Downloads/mongodb-driver-core-3.3.0.jar"/>
-	<classpathentry kind="lib" path="/Users/luca/Downloads/dom4j-1.6.1/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Giorgio/git/mongodb-driver-3.3.0.jar" sourcepath="/Users/Giorgio/git/mongodb-driver-3.3.0-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/Giorgio/git/bson-3.3.0.jar"/>
+	<classpathentry kind="lib" path="/Users/Giorgio/git/mongodb-driver-3.3.0-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/Giorgio/git/dom4j-1.6.1/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Giorgio/git/mongodb-driver-core-3.1.1-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/Giorgio/git/mongodb-driver-core-3.1.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Giorgio/git/stanford-postagger-2015-12-09/stanford-postagger-3.6.0.jar" sourcepath="/Users/Giorgio/git/stanford-postagger-2015-12-09/stanford-postagger-3.6.0-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/Giorgio/git/stanford-postagger-2015-12-09/lib/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="/Users/Giorgio/git/stanford-postagger-2015-12-09/lib/slf4j-simple.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
