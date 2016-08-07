@@ -12,16 +12,18 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.sii.crf.model.Opinion;
 import com.sii.crf.model.Sentence;
+import com.sii.crf.model.Token;
 import com.sii.crf.mongodb.DataSource;
 
 public class SentenceDAOImplementation implements SentenceDAO {
 	
-	private final static String DB_COLLECTION_NAME = "trainSentencesT1";
+	private final static String DB_COLLECTION_NAME1 = "trainSentencesT1";
+	private final static String DB_COLLECTION_NAME2 = "trainSentencesNLP";
 	
-	public List<Sentence> findAll() {
+	public List<Sentence> findAllPars() {
 		MongoDatabase db = DataSource.getInstance().getDb();
 		List<Sentence> sentences = new ArrayList<Sentence>();
-		List<Document> documents = db.getCollection(DB_COLLECTION_NAME).find().into(new ArrayList<Document>());
+		List<Document> documents = db.getCollection(DB_COLLECTION_NAME1).find().into(new ArrayList<Document>());
 		if (documents.size() != 0) {
 			for (Document currSentence : documents) {
 				Sentence sentence = new Sentence();
@@ -35,6 +37,69 @@ public class SentenceDAOImplementation implements SentenceDAO {
 					opinions.add(opinion);
 				}
 				sentence.setOpinions(opinions);
+				sentences.add(sentence);
+			}
+		}
+		return sentences;
+	}
+
+	public boolean insertPars(Sentence sentence) {
+		MongoDatabase db = DataSource.getInstance().getDb();
+		boolean check = true;
+		String text = sentence.getText();
+		Document document = new Document();
+		document.put("text", text);
+		List<Document> opinionsDoc = new ArrayList<Document>();
+		List<Opinion> opinions = sentence.getOpinions();
+		for (int i=0; i<opinions.size(); i++) {
+			Document opinion = new Document();
+			opinion.put("category", opinions.get(i).getCategory());
+			opinion.put("polarity", opinions.get(i).getPolarity());
+			opinionsDoc.add(opinion);
+		}
+		document.put("opinions", opinionsDoc);
+		try{
+			db.getCollection(DB_COLLECTION_NAME1).insertOne(document);
+		} catch(Exception e) {
+			e.printStackTrace();
+			check = false;
+		}
+		return check;
+	}
+
+	public List<Sentence> findAll() {
+		MongoDatabase db = DataSource.getInstance().getDb();
+		List<Sentence> sentences = new ArrayList<Sentence>();
+		List<Document> documents = db.getCollection(DB_COLLECTION_NAME2).find().into(new ArrayList<Document>());
+		if (documents.size() != 0) {
+			for (Document currSentence : documents) {
+				Sentence sentence = new Sentence();
+				List<Opinion> opinions = new ArrayList<Opinion>();
+				sentence.setText(currSentence.getString("text"));
+				List<Document> documentsOpinion = (List<Document>) currSentence.get("opinions");
+				for (Document currOpinion : documentsOpinion) {
+					Opinion opinion = new Opinion();
+					opinion.setCategory(currOpinion.getString("category"));
+					opinion.setPolarity(currOpinion.getString("polarity"));
+					opinions.add(opinion);
+				}
+				List<Token> tokens = new ArrayList<Token>();
+				List<Document> documentsToken = (List<Document>) currSentence.get("tokens");
+				for (Document currToken : documentsToken) {
+					Token token = new Token();
+					token.setIndex(currToken.getInteger("index"));
+					token.setWord(currToken.getString("word"));
+					token.setIndex(currToken.getInteger("index"));
+					token.setLemma(currToken.getString("lemma"));
+					token.setCharacterOffsetBegin(currToken.getInteger("characterOffsetBegin"));
+					token.setCharacterOffsetEnd(currToken.getInteger("characterOffsetEnd"));
+					token.setPos(currToken.getString("pos"));
+					token.setNer(currToken.getString("ner"));
+					token.setSpeaker(currToken.getString("speaker"));
+					tokens.add(token);
+				}
+				sentence.setOpinions(opinions);
+				sentence.setTokens(tokens);
 				sentences.add(sentence);
 			}
 		}
@@ -55,9 +120,24 @@ public class SentenceDAOImplementation implements SentenceDAO {
 			opinion.put("polarity", opinions.get(i).getPolarity());
 			opinionsDoc.add(opinion);
 		}
+		List<Document> tokensDoc = new ArrayList<Document>();
+		List<Token> tokens = sentence.getTokens();
+		for (int i=0; i<tokens.size(); i++) {
+			Document token = new Document();
+			token.put("index", tokens.get(i).getIndex());
+			token.put("word", tokens.get(i).getWord());
+			token.put("lemma", tokens.get(i).getLemma());
+			token.put("characterOffsetBegin", tokens.get(i).getCharacterOffsetBegin());
+			token.put("characterOffsetEnd", tokens.get(i).getCharacterOffsetEnd());
+			token.put("pos", tokens.get(i).getPos());
+			token.put("ner", tokens.get(i).getNer());
+			token.put("speaker", tokens.get(i).getSpeaker());
+			tokensDoc.add(token);
+		}
 		document.put("opinions", opinionsDoc);
+		document.put("tokens", tokensDoc);
 		try{
-			db.getCollection(DB_COLLECTION_NAME).insertOne(document);
+			db.getCollection(DB_COLLECTION_NAME2).insertOne(document);
 		} catch(Exception e) {
 			e.printStackTrace();
 			check = false;

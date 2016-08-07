@@ -19,7 +19,7 @@ import javax.xml.parsers.DocumentBuilder;
 
 public class ParserXML {
 	
-	private final static String XML_FILE_NAME = "/Users/luca/Documents/workspace/sii/src/com/sii/crf/parser/ABSA16_Laptops_Train_SB1_v2.xml";
+	private final static String XML_FILE_NAME = "/Users/luca/site/sii_absa/src/com/sii/crf/parser/ABSA16_Laptops_Train_SB1_v2.xml";
 	
 	public static List<Sentence> parseXMLFileToList() {
 		File xmlFile = new File(XML_FILE_NAME);

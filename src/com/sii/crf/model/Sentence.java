@@ -9,7 +9,8 @@ public class Sentence {
 	private String id;
 	private String text;
 	private List<Opinion> opinions;
-	
+	private List<Token> tokens;
+
 	public String getId() {
 		return this.id;
 	}
@@ -34,11 +35,26 @@ public class Sentence {
 		this.opinions = opinions;
 	}
 	
+	public List<Token> getTokens() {
+		return tokens;
+	}
+
+	public void setTokens(List<Token> tokens) {
+		this.tokens = tokens;
+	}
+	
 	public String toString() {
 		String description = "------------ Sentence --------------- \n";
 		description += "Text: "+ this.getText() + "\n";
 		for (int i=0; i<this.getOpinions().size(); i++) {
 			description += this.opinions.get(i).toString();
+		}
+		if (this.getTokens() != null) {
+			description += "[Tokens= ";
+			for (int j=0; j<this.getTokens().size(); j++) {
+				description += this.tokens.get(j).toString();
+			}
+			description += "]";
 		}
 		return description;
 	}
