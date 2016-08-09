@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import com.mongodb.Block;
 import com.mongodb.client.FindIterable;
@@ -17,6 +18,22 @@ import com.sii.crf.mongodb.DataSource;
 public class SentenceDAOImplementation implements SentenceDAO {
 	
 	private final static String DB_COLLECTION_NAME = "trainSentencesT1";
+	
+	private Document sentence2document(Sentence sentence){
+		String text = sentence.getText();
+		Document document = new Document();
+		document.put("text", text);
+		List<Document> opinionsDoc = new ArrayList<Document>();
+		List<Opinion> opinions = sentence.getOpinions();
+		for (int i=0; i<opinions.size(); i++) {
+			Document opinion = new Document();
+			opinion.put("category", opinions.get(i).getCategory());
+			opinion.put("polarity", opinions.get(i).getPolarity());
+			opinionsDoc.add(opinion);
+		}
+		document.put("opinions", opinionsDoc);
+		return document;
+	}
 	
 	public List<Sentence> findAll() {
 		MongoDatabase db = DataSource.getInstance().getDb();
@@ -56,13 +73,25 @@ public class SentenceDAOImplementation implements SentenceDAO {
 			opinionsDoc.add(opinion);
 		}
 		document.put("opinions", opinionsDoc);
-	/*	try{
+		/*try{
 			db.getCollection(DB_COLLECTION_NAME).insertOne(document);
 		} catch(Exception e) {
 			e.printStackTrace();
 			check = false;
 		} */
 		return check;
+	}
+	
+	public boolean insert(Sentence sentence, String tagging){ //metodo fittizio, not sure to update it in future.
+		boolean check = true;
+		MongoDatabase db = DataSource.getInstance().getDb();
+		Document document= sentence2document(sentence);
+		
+		POSTaggedSentenceDAOImplementation dao_tagged =  new POSTaggedSentenceDAOImplementation();
+		//document.put("POSTagging", dao_tagged.find(tagging));
+		//db.getCollection(DB_COLLECTION_NAME).findOneAndReplace(new Document("text", sentence.getText()), document);
+		
+		return check;		
 	}
 	
 }

@@ -8,7 +8,8 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 public class POSTagger {
 	
 	public static String tagSentence(String toTag){
-		MaxentTagger tagger = new MaxentTagger("taggers/english-bidirectional-distsim.tagger");
+		//MaxentTagger tagger = new MaxentTagger("taggers/english-bidirectional-distsim.tagger");
+		MaxentTagger tagger = new MaxentTagger("taggers/english-left3words-distsim.tagger"); //should be faster !
 		String tagged= tagger.tagString(toTag);
 		return tagged;
 	}
