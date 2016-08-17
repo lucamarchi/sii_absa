@@ -46,43 +46,57 @@ public class Main {
 	final static String DATA_DIR = "/Users/luca/Desktop/data/";
 	
 	public static void main(String[] args) throws IOException {
-		//InsertController.parseAndInsert();
-		//InsertController.NLPAndInsert();
-		SentenceDAO dao = new SentenceDAOImplementation();
-		List<Sentence> sentences = dao.findAll();
-		List<Token> tokens = new ArrayList<Token>();
-		for (Sentence s : sentences) {
-			tokens.addAll(Labelling.getLabel(s.getTokens()));
-		}
-		for (Token t : tokens) {
-			if (t.getLabel().equals("FA") || t.getLabel().equals("FPA")) {
-				System.out.println("---------------------------");
-				System.out.println("Token -> "+t.getLemma() +", label -> "+t.getLabel());
-				System.out.println("---------------------------");
-			}
-		}
-		/*String[] texts = new String[]{"This laptop is amazing","The keyboard is not so comfortable"};
-		Sentence s = new Sentence();
-		s.setText("The keyboard is not so comfortable.");
-		Sentence s1 = NLPClient.getNLPResults(s);
-		System.out.println(s1.toString());*/
-		/*
+		
+		/*	InsertController.parseAndInsert() prende le singole sentences dall'xml 
+		 * 	e le salva nel db; il file xml si trova nel package parser, il db si chiama
+		 * 	db_sii, la collezione trainSentencesT1.
+		 */
+		InsertController.parseAndInsert();
+		
+		
+		/*	Mostra alcune informazioni sul dataset
+		 */
+		
+		StatisticsController.showStatistics();
+		
+		
+		/*	InsertController.NLPAndInsert() prende le singole sentences 
+		 * 	dal db del comando prima, e prende i risultati del NLP salvando
+		 * 	il tutto nella collezione trainSentencesNLP; NB: bisogna eseguire
+		 * 	questo comando con il server NLP in esecuzione.
+		 */
+		InsertController.NLPAndInsert();
+		
+		
+		/*	FileIO.createDirectoriesByPolarityLabel(sentences) dato un'array di 
+		 * 	sentences crea le tre cartelle negative, neutral e positive 
+		 * 	ognuna delle quali contentente tanti file quante sentences
+		 * 	(una per file) con quella class target; NB: cambiare la path
+		 * 	in FileIO delle directory. 
+		 */
+		
 		SentenceDAO dao = new SentenceDAOImplementation();
 		List<Sentence> sentences = dao.findAll();
 		FileIO.createDirectoriesByPolarityLabel(sentences);
+		
+		
+		/*	ImporterData prende come input le istanze nei file del passo precendente
+		 * 	e le importa in Mallet.
+		 */
+		
 		ImportData importer = new ImportData();
         InstanceList instances = importer.readDirectory(new File("/Users/luca/Desktop/data"));
-        */
-        //classify1.printLabelings(new File("/Users/luca/Desktop/unlabeled.txt"));
-		// -------------------- EXAMPLE OF IMPOREXAMPLE -------------- //
-		/*ImportExample importer = new ImportExample();
-        InstanceList instances = importer.readDirectory(new File("/Users/luca/Downloads/sample-data/web"));
-        instances.save(new File("/Users/luca/Downloads/sample-data/web/output.txt"));
-		Instance i = instances.get(1);
-		System.out.println("--------- "+i.getName().toString()+"--------------");
-			System.out.println(i.getLabeling().toString());
-			System.out.println("_________________________");
-		*/
+        
+        
+        /*	Esegue per 10 volte tre classificatori (MaxEntr,NaiveBayes,DecTree) 
+         * 	e visualizza i valori medi di accuracy e f1.
+         */
+        
+        EvaluateClassifier.evaluateDataClassify(instances, 10);
+        
+        
+        // QUESTA PARTE SOTTO E' ZOZZUME CHE DEVO SISTEMA BENE
+        
         // ------------------------ SCRITTURA FILE UNO PER RIGA, ABBOZZO DI MODEL PER CRF ----------------------
 		/*SentenceDAO dao = new SentenceDAOImplementation();
 		List<Sentence> sentences = dao.findAll();
