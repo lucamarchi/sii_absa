@@ -10,6 +10,7 @@ public class Sentence {
 	private String text;
 	private List<Opinion> opinions;
 	private List<Token> tokens;
+	private List<Dependency> dependencies;
 
 	public String getId() {
 		return this.id;
@@ -43,6 +44,14 @@ public class Sentence {
 		this.tokens = tokens;
 	}
 	
+	public List<Dependency> getDependecies() {
+		return this.dependencies;
+	}
+
+	public void setDependencies(List<Dependency> dependencies) {
+		this.dependencies = dependencies;
+	}
+	
 	public String toString() {
 		String description = "------------ Sentence --------------- \n";
 		description += "Text: "+ this.getText() + "\n";
@@ -54,7 +63,14 @@ public class Sentence {
 			for (int j=0; j<this.getTokens().size(); j++) {
 				description += this.tokens.get(j).toString();
 			}
-			description += "]";
+			description += "]\n";
+		}
+		if (this.getDependecies() != null) {
+			description += "[Dependencies= ";
+			for (int j=0; j<this.getDependecies().size(); j++) {
+				description += this.dependencies.get(j).toString();
+			}
+			description += "]\n";
 		}
 		return description;
 	}

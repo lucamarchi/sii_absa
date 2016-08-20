@@ -10,6 +10,7 @@ import org.bson.Document;
 import com.mongodb.Block;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
+import com.sii.crf.model.Dependency;
 import com.sii.crf.model.Opinion;
 import com.sii.crf.model.Sentence;
 import com.sii.crf.model.Token;
@@ -98,8 +99,20 @@ public class SentenceDAOImplementation implements SentenceDAO {
 					token.setSpeaker(currToken.getString("speaker"));
 					tokens.add(token);
 				}
+				List<Dependency> dependencies = new ArrayList<Dependency>();
+				List<Document> documentsDependency = (List<Document>) currSentence.get("dependencies");
+				for (Document currDependency : documentsDependency) {
+					Dependency dependency = new Dependency();
+					dependency.setRelation(currDependency.getString("relation"));
+					dependency.setGov(currDependency.getString("gov"));
+					dependency.setIndexGov(currDependency.getInteger("indexGov"));
+					dependency.setDep(currDependency.getString("dep"));
+					dependency.setIndexDep(currDependency.getInteger("indexDep"));
+					dependencies.add(dependency);
+				}
 				sentence.setOpinions(opinions);
 				sentence.setTokens(tokens);
+				sentence.setDependencies(dependencies);
 				sentences.add(sentence);
 			}
 		}
@@ -134,8 +147,20 @@ public class SentenceDAOImplementation implements SentenceDAO {
 			token.put("speaker", tokens.get(i).getSpeaker());
 			tokensDoc.add(token);
 		}
+		List<Document> dependenciesDoc = new ArrayList<Document>();
+		List<Dependency> dependencies = sentence.getDependecies();
+		for (int i=0; i<dependencies.size(); i++) {
+			Document dependency = new Document();
+			dependency.put("relation", dependencies.get(i).getRelation());
+			dependency.put("gov", dependencies.get(i).getGov());
+			dependency.put("indexGov", dependencies.get(i).getIndexGov());
+			dependency.put("dep", dependencies.get(i).getDep());
+			dependency.put("indexDep", dependencies.get(i).getIndexDep());
+			dependenciesDoc.add(dependency);
+		}
 		document.put("opinions", opinionsDoc);
 		document.put("tokens", tokensDoc);
+		document.put("dependencies", dependenciesDoc);
 		try{
 			db.getCollection(DB_COLLECTION_NAME2).insertOne(document);
 		} catch(Exception e) {

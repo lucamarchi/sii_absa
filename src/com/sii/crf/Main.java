@@ -45,7 +45,22 @@ public class Main {
 	
 	final static String DATA_DIR = "/Users/luca/Desktop/data/";
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
+		SentenceDAO dao = new SentenceDAOImplementation();
+		List<Sentence> sentences = dao.findAllPars();
+		for (Sentence s : sentences) {
+			Sentence tmp = NLPClient.getNLPResults(s);
+			dao.insert(tmp);
+		}
+		List<Sentence> sentences1 = dao.findAll();
+		for (Sentence s : sentences1) {
+			System.out.println(s.toString());
+		}
+	}
+	
+	
+	public static void prova(String[] args) throws IOException {
+		
 		
 		/*	InsertController.parseAndInsert() prende le singole sentences dall'xml 
 		 * 	e le salva nel db; il file xml si trova nel package parser, il db si chiama
@@ -91,8 +106,8 @@ public class Main {
         /*	Esegue per 10 volte tre classificatori (MaxEntr,NaiveBayes,DecTree) 
          * 	e visualizza i valori medi di accuracy e f1.
          */
-        
-        EvaluateClassifier.evaluateDataClassify(instances, 10);
+        int num = 10;
+        EvaluateClassifier.evaluateDataClassify(instances,10);
         
         
         // QUESTA PARTE SOTTO E' ZOZZUME CHE DEVO SISTEMA BENE
@@ -155,6 +170,7 @@ public class Main {
 				e.printStackTrace();
 			}
 		}*/
+        
 	}
 	
 }
