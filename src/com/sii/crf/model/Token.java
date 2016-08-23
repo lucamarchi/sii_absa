@@ -70,7 +70,7 @@ public class Token {
 	}
 
 	public String toString() {
-		return "Original: "+this.word +", pos: "+this.pos+"\n";
+		return "Original: "+this.word +", pos: "+this.pos+", label: "+this.label+"\n";
 	}
 	
 }

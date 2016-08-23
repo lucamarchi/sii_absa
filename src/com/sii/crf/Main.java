@@ -14,6 +14,7 @@ import com.sii.crf.controller.StatisticsController;
 import com.sii.crf.mallet.Classify;
 import com.sii.crf.mallet.EvaluateClassifier;
 import com.sii.crf.mallet.ImportData;
+import com.sii.crf.model.Dependency;
 import com.sii.crf.model.Opinion;
 import com.sii.crf.model.Sentence;
 import com.sii.crf.model.Token;
@@ -47,17 +48,21 @@ public class Main {
 	
 	public static void main(String[] args) {
 		SentenceDAO dao = new SentenceDAOImplementation();
-		List<Sentence> sentences = dao.findAllPars();
-		for (Sentence s : sentences) {
-			Sentence tmp = NLPClient.getNLPResults(s);
-			dao.insert(tmp);
+		List<Sentence> sentenceList = dao.findAll();
+		int i = 0;
+		for (Sentence s : sentenceList) {
+			Sentence x = Labelling.getLabel(s);
+			for (Token t : s.getTokens()) {
+				if (t.getLabel().equals("FH")) {
+					i++;
+					System.out.println(x);
+				}
+				break;
+			}
+			System.out.println("Frasi con label: "+i+",su totale: "+sentenceList.size());
 		}
-		List<Sentence> sentences1 = dao.findAll();
-		for (Sentence s : sentences1) {
-			System.out.println(s.toString());
-		}
-	}
 	
+	}
 	
 	public static void prova(String[] args) throws IOException {
 		
