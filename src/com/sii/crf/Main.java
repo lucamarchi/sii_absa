@@ -24,6 +24,7 @@ import com.sii.crf.nlpclient.Labelling;
 import com.sii.crf.nlpclient.NLPClient;
 import com.sii.crf.parser.ParserXML;
 import com.sii.crf.writer.FileIO;
+import com.sii.input.LinksModels;
 
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
@@ -46,8 +47,8 @@ public class Main {
 	
 	final static String DATA_DIR = "/Users/luca/Desktop/data/";
 	
-	public static void main(String[] args) {
-		SentenceDAO dao = new SentenceDAOImplementation();
+	public static void main(String[] args) throws IOException {
+		/*SentenceDAO dao = new SentenceDAOImplementation();
 		List<Sentence> sentenceList = dao.findAll();
 		int i = 0;
 		for (Sentence s : sentenceList) {
@@ -60,7 +61,11 @@ public class Main {
 				break;
 			}
 			System.out.println("Frasi con label: "+i+",su totale: "+sentenceList.size());
-		}
+		} */
+		String p = "https://www.amazon.com/s/ref=sr_pg_191/158-1671565-1841957?rh=n%3A172282%2Cn%3A%21493964%2Cn%3A541966%2Cn%3A13896617011%2Cn%3A565108%2Cn%3A13896615011&page=191&ie=UTF8&qid=1473356431&spIA=B01GKC5RSG,B01606M7VM,B01DOU2LPE,B01EBC0JI0,B016QY83MK,B01D0YWR9E,B01COWF3G2,B01AZUQFGC,B01IJ4H3JY,B01HM5UVEA,B01H4QE364,B00U7QWIGQ,B01GA54HAC,B017Y6C1L8,B01EGAQ3SW,B01B6ST8DY,B01HZ1G0VO,B017LQ9NMG,B01GRE7MXU,B01GSAA456,B00XZUCBUO,B01KAE0K5A,B01C71F19O,B00UTKZZRE,B01DIPNNBG,B01HXIDJYA,B01B1AJ1S4,B01EYZWA68,B01D0DT0GI,B01DTHWQIO,B01FISV7YG,B01AJ4CL08,B01I3UQJTE,B01FLAV0DO,B01C70QWMU,B01F2OSQUE,B00GT79B80,B01EXCTKHO,B00T7EXKLG,B01DUML0S0,"
+				+ "B01AAY73YG,B01I3U9XFQ,B01LBZ26E0,B00FEJ07V4,B01F0ALBIO,B01LDF9I";
+		LinksModels.collectLinks(p,192);
+		
 	
 	}
 	
@@ -114,7 +119,7 @@ public class Main {
         int num = 10;
         EvaluateClassifier.evaluateDataClassify(instances,10);
         
-        
+   // -------------------------------------------------------------------------------------------------------     
         // QUESTA PARTE SOTTO E' ZOZZUME CHE DEVO SISTEMA BENE
         
         // ------------------------ SCRITTURA FILE UNO PER RIGA, ABBOZZO DI MODEL PER CRF ----------------------
