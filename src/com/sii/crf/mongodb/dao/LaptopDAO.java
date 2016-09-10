@@ -48,6 +48,7 @@ public class LaptopDAO {
 			lap.setName(doc.getString("name"));
 			lap.setLink(doc.getString("link"));
 			lap.setModel_number(doc.getString("model_number"));
+			lap.setAsin(doc.getString("asin"));
 			laptops.add(lap);
 			System.out.println(lap.toString());
 		}
@@ -55,10 +56,10 @@ public class LaptopDAO {
 	}
 
 	public static void update(Laptop lap) { 
-		// aggioran il model number di chi ha lo stesso link, nel caso ci fossero doppioni
+		// aggioran il model number di chi ha lo stesso link, nel caso ci fossero doppioni e l ASIN
 		MongoDatabase db = DataSource.getInstance().getDb();
 		Document filter = new Document("link", lap.getLink());
-		Document update = new Document("$set", new Document("model_number", lap.getModel_number()));
+		Document update = new Document("$set", new Document("model_number", lap.getModel_number()).append("asin", lap.getAsin()));
 		UpdateResult docsUpdated = db.getCollection(DB_COLLECTION_NAME).updateMany(filter, update);
 		System.out.println(docsUpdated.getModifiedCount() );
 	}

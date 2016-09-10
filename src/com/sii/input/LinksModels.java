@@ -76,15 +76,20 @@ public class LinksModels {
 		
 	}
 	
-	public static void collectModelNumber() throws IOException, InterruptedException{
+	public static void collectModelIDs() throws IOException, InterruptedException{
 		List<Laptop> laps = LaptopDAO.findAll();
 		final int step = 5;
 		int cont = 0;
+		int real_cont = 0;
 		String userAgent= "";
 		Document doc;
 		for(Laptop lap: laps){
 			cont++;
-			if(lap.getModel_number() == null) {
+			real_cont++;
+			if((lap.getModel_number() == null) || 
+					(lap.getModel_number().equals((Object)lap.getAsin() )&& real_cont>500) || 
+					(lap.getAsin().equals((Object)"sconosciuto") )   ) 
+			{
 				switch(cont){
 					case 1: userAgent="Mozilla"; 
 					case 2: userAgent="Safari";
@@ -93,16 +98,22 @@ public class LinksModels {
 					case 5: userAgent="Camino";
 					case 6: userAgent="Chrome";
 					
+					default : userAgent="Mozilla";
 				}
 				
 				doc = Jsoup.connect(lap.getLink()).userAgent(userAgent).get();
 				String mod_num = LinksModels.findModelNumber(doc);
+				String asin = LinksModels.findASINnumber(doc);
 				if(mod_num != null)
 					lap.setModel_number(mod_num);
 				else
 					lap.setModel_number("NOT FOUND");
+				if(asin != null)
+					lap.setAsin(asin);
+				else
+					lap.setAsin("NOT FOUND");
 				LaptopDAO.update(lap);
-				System.out.println("sono entrato al "+cont);
+				System.out.println("sono entrato al "+real_cont);
 				
 				TimeUnit.SECONDS.sleep(3);
 				if(cont == 6)
@@ -117,6 +128,7 @@ public class LinksModels {
 	private static String findModelNumber(Document d){
 		String mod_num = null;
 		String cssQuery1 = "table[id=\"productDetails_techSpec_section_2\"] " ;
+		//String cssQuery1bis = "table[id=\"productDetails_detailBullets_sections1\"]";
 		String cssQuery2 = "[class]";
 		Elements table = d.select(cssQuery1);
 		Elements thtd = table.select(cssQuery2);
@@ -138,5 +150,32 @@ public class LinksModels {
 		//System.out.println(mod_num +"  "+next);
 		return mod_num;
 	}
+	
+	private static String findASINnumber(Document d){
+		String asin = null;
+		String cssQuery1 = "table[id=\"productDetails_detailBullets_sections1\"]";
+		String cssQuery2 = "[class]";
+		Elements table = d.select(cssQuery1);
+		Elements thtd = table.select(cssQuery2);
+		boolean next = false;
+		for (Element el : thtd){
+			
+			if (next == true){
+				System.out.println(el.text());
+				asin = el.text();
+				next = false;
+				return asin;
+			}
+			if( !next && (el.text().equals((Object)("ASIN")) )){
+				next = true;
+			}
+			
+		}
+		
+		//System.out.println(mod_num +"  "+next);
+		return asin;
+	}
+	
+	
 
 }

@@ -4,7 +4,14 @@ public class Laptop {
 	private String name;
 	private String link;
 	private String model_number;
+	private String asin;
 	
+	public String getAsin() {
+		return asin;
+	}
+	public void setAsin(String asin) {
+		this.asin = asin;
+	}
 	public String getName() {
 		return name;
 	}
@@ -25,7 +32,7 @@ public class Laptop {
 	}
 	
 	public String toString(){
-		return this.getName()+"\n"+this.getLink()+"\n"+this.getModel_number()+"\n";
+		return this.getName()+"\n"+this.getLink()+"\n"+this.getModel_number()+"\n"+"ASIN: "+this.getAsin();
 	}
 	
 }

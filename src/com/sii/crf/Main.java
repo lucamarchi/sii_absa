@@ -70,9 +70,8 @@ public class Main {
 			System.out.println("Frasi con label: "+i+",su totale: "+sentenceList.size());
 		} */
 		
-		//RetrieveReview.retrieve("https://www.amazon.com/Apple-MD101LL-13-3-inch-Certified-Refurbished/product-reviews"
-		//		+ "/B00VQR7MVQ/ref=cm_cr_dp_see_all_btm?ie=UTF8&showViewpoints=1&sortBy=recent", 10);
-		LinksModels.collectModelNumber();
+	//RetrieveReview.retrieve("https://www.amazon.com/Dell-15-6-Inch-Quad-Core-i5-6300HQ-Processor/dp/B015PYYDMQ/ref=lp_13896615011_1_5?s=pc&ie=UTF8&qid=1473535959&sr=1-5", 100);
+		LinksModels.collectModelIDs();
 		DataSource.getInstance().closeDb();
 	}
 	
