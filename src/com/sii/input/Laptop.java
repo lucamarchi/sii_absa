@@ -24,4 +24,8 @@ public class Laptop {
 		this.model_number = model_number;
 	}
 	
+	public String toString(){
+		return this.getName()+"\n"+this.getLink()+"\n"+this.getModel_number()+"\n";
+	}
+	
 }

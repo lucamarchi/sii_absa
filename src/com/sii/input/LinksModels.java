@@ -1,7 +1,8 @@
 package com.sii.input;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,8 +13,7 @@ import com.sii.crf.mongodb.dao.LaptopDAO;
 
 public class LinksModels {
 	
-	//public LinksModels() throws IOException{}
-	//File input = new File ("Users/Giorgio/Download/Amazon.com_Traditional Laptops_Electronics.html");
+	
 	public static void collectLinks() throws IOException{
 		Document doc = Jsoup.connect("https://www.amazon.com/Traditional-Laptop-Computers/b/"
 				+ "ref=sn_gfs_co_Laptops_VS_13896615011_2?ie=UTF8&node=13896615011&pf_rd_p=b4961a0b-c5f6-4b4a"
@@ -75,6 +75,68 @@ public class LinksModels {
 			collectLinks(nextURLpage, cont+1);
 		
 	}
+	
+	public static void collectModelNumber() throws IOException, InterruptedException{
+		List<Laptop> laps = LaptopDAO.findAll();
+		final int step = 5;
+		int cont = 0;
+		String userAgent= "";
+		Document doc;
+		for(Laptop lap: laps){
+			cont++;
+			if(lap.getModel_number() == null) {
+				switch(cont){
+					case 1: userAgent="Mozilla"; 
+					case 2: userAgent="Safari";
+					case 3: userAgent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)";
+					case 4: userAgent="Opera";
+					case 5: userAgent="Camino";
+					case 6: userAgent="Chrome";
+					
+				}
+				
+				doc = Jsoup.connect(lap.getLink()).userAgent(userAgent).get();
+				String mod_num = LinksModels.findModelNumber(doc);
+				if(mod_num != null)
+					lap.setModel_number(mod_num);
+				else
+					lap.setModel_number("NOT FOUND");
+				LaptopDAO.update(lap);
+				System.out.println("sono entrato al "+cont);
+				
+				TimeUnit.SECONDS.sleep(3);
+				if(cont == 6)
+					cont = 0;
+			}
+			//System.out.println(cont);
+			
+		}
+		
+	}
 
+	private static String findModelNumber(Document d){
+		String mod_num = null;
+		String cssQuery1 = "table[id=\"productDetails_techSpec_section_2\"] " ;
+		String cssQuery2 = "[class]";
+		Elements table = d.select(cssQuery1);
+		Elements thtd = table.select(cssQuery2);
+		boolean next = false;
+		for (Element el : thtd){
+			
+			if (next == true){
+				System.out.println(el.text());
+				mod_num = el.text();
+				next = false;
+				return mod_num;
+			}
+			if( !next && (el.text().equals((Object)("Item model number")) )){
+				next = true;
+			}
+			
+		}
+		
+		//System.out.println(mod_num +"  "+next);
+		return mod_num;
+	}
 
 }
