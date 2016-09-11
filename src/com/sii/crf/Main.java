@@ -53,6 +53,7 @@ import cc.mallet.util.Randoms;
 public class Main {
 	
 	final static String DATA_DIR = "/Users/luca/Desktop/data/";
+	final static int max_reviews = 100;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
 		/*SentenceDAO dao = new SentenceDAOImplementation();
@@ -73,6 +74,19 @@ public class Main {
 	//RetrieveReview.retrieve("https://www.amazon.com/Lenovo-Y700-GeForce-Windows-80NV0026US/dp/B014MIBR7K/ref=lp_13896615011_1_14?s=pc&ie=UTF8&qid=1473606227&sr=1-14", 100);
 		LinksModels.collectModelIDs();
 		DataSource.getInstance().closeDb();
+	}
+	
+	public static Laptop retrieveLaptop(String asin) {
+		Laptop lap = LaptopDAO.findASIN(asin);
+		if (lap != null){
+			System.out.println("model retrieved");
+			//RetrieveReview.retrieve(lap.getLink(), max_reviews);
+		}
+		return lap;	
+	}
+	
+	public static List<String> retrieveReviews(String url) throws IOException{
+		return RetrieveReview.retrieve(url, max_reviews);
 	}
 	
 	public static void prova(String[] args) throws IOException {

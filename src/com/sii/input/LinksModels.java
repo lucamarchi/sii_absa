@@ -86,8 +86,11 @@ public class LinksModels {
 		for(Laptop lap: laps){
 			cont++;
 			real_cont++;
+			//System.out.println(lap.getLink() +"\n"+lap.toString());
+			if(lap.getAsin() == null)
+				lap.setAsin("sconosciuto");
 			if(((lap.getAsin().equals((Object)"sconosciuto")) || 
-					(lap.getModel_number().equals((Object)lap.getAsin() )&& real_cont>800) )   ) 
+					(lap.getModel_number().equals((Object)lap.getAsin() ) && real_cont>2935) )   ) 
 			{
 				switch(cont){
 					case 1: userAgent="Mozilla"; 
@@ -97,6 +100,7 @@ public class LinksModels {
 					case 5: userAgent="Camino";
 					case 6: userAgent="Chrome";
 					case 7: userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/601.6.17 (KHTML, like Gecko)";
+					case 8: userAgent ="Safari/601.6.17";
 					
 					default : userAgent="Mozilla";
 				}
@@ -110,18 +114,22 @@ public class LinksModels {
 					lap.setModel_number("NOT FOUND");
 				if(asin != null)
 					lap.setAsin(asin);
-				else
+				else{
 					lap.setAsin("NOT FOUND");
+					System.out.println("ASIN not found");
+					if(LinksModels.asinFROMurl(lap) != null)
+						lap.setAsin(LinksModels.asinFROMurl(lap));
+				}
 				LaptopDAO.update(lap);
 				System.out.println("sono entrato al "+real_cont);
 				
-				TimeUnit.SECONDS.sleep(3);
-				if(cont == 7)
+				TimeUnit.SECONDS.sleep(2);
+				if(cont == 8)
 					cont = 0;
 			}
 			
 			//System.out.println(cont);
-			RetrieveReview.retrieve(lap.getLink(), 100);   //for testing retrieve
+		//	RetrieveReview.retrieve(lap.getLink(), 100);   //for testing retrieve
 		}
 		
 	}
@@ -174,6 +182,23 @@ public class LinksModels {
 		}
 		
 		//System.out.println(mod_num +"  "+next);
+		return asin;
+	}
+	
+	
+	private static String asinFROMurl(Laptop lap){
+		String asin = null;
+		String words[]=lap.getLink().split("/");
+		boolean next = false;
+		for (int i = 0; i < words.length; i++){
+			if(next){
+				asin = words[i];
+				break;
+			}
+			if (words[i].equals((Object) "dp") )
+				next = true;
+		}
+		System.out.println("ASIN found from url: "+asin);
 		return asin;
 	}
 	

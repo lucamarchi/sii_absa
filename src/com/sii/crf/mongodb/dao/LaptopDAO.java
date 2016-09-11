@@ -63,4 +63,36 @@ public class LaptopDAO {
 		UpdateResult docsUpdated = db.getCollection(DB_COLLECTION_NAME).updateMany(filter, update);
 		System.out.println(docsUpdated.getModifiedCount() );
 	}
+	
+	public static Laptop findASIN(String asin){
+		MongoDatabase db = DataSource.getInstance().getDb();
+		List<Document> docs = db.getCollection(DB_COLLECTION_NAME).find(new Document("asin",asin)).into(new ArrayList<Document>());
+		if (!(docs.isEmpty())){
+			Document doc = docs.get(0);
+			Laptop lap = new Laptop();
+			lap.setName(doc.getString("name"));
+			lap.setLink(doc.getString("link"));
+			lap.setModel_number(doc.getString("model_number"));
+			lap.setAsin(doc.getString("asin"));
+			return lap;
+		}
+		else return null;
+		
+	}
+	
+	public static List<Laptop> find(String field, String value){
+		MongoDatabase db = DataSource.getInstance().getDb();
+		List<Document> docs = db.getCollection(DB_COLLECTION_NAME).find(new Document(field,value)).into(new ArrayList<Document>());
+		List<Laptop> laptops = new ArrayList<Laptop>();;
+		for (Document doc : docs){
+			Laptop lap = new Laptop();
+			lap.setName(doc.getString("name"));
+			lap.setLink(doc.getString("link"));
+			lap.setModel_number(doc.getString("model_number"));
+			lap.setAsin(doc.getString("asin"));
+			laptops.add(lap);
+			System.out.println(lap.toString());
+		}
+		return laptops;
+	}
 }
