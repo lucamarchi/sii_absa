@@ -70,7 +70,7 @@ public class Main {
 			System.out.println("Frasi con label: "+i+",su totale: "+sentenceList.size());
 		} */
 		
-	//RetrieveReview.retrieve("https://www.amazon.com/Dell-15-6-Inch-Quad-Core-i5-6300HQ-Processor/dp/B015PYYDMQ/ref=lp_13896615011_1_5?s=pc&ie=UTF8&qid=1473535959&sr=1-5", 100);
+	//RetrieveReview.retrieve("https://www.amazon.com/Lenovo-Y700-GeForce-Windows-80NV0026US/dp/B014MIBR7K/ref=lp_13896615011_1_14?s=pc&ie=UTF8&qid=1473606227&sr=1-14", 100);
 		LinksModels.collectModelIDs();
 		DataSource.getInstance().closeDb();
 	}

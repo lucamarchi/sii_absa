@@ -86,9 +86,8 @@ public class LinksModels {
 		for(Laptop lap: laps){
 			cont++;
 			real_cont++;
-			if((lap.getModel_number() == null) || 
-					(lap.getModel_number().equals((Object)lap.getAsin() )&& real_cont>500) || 
-					(lap.getAsin().equals((Object)"sconosciuto") )   ) 
+			if(((lap.getAsin().equals((Object)"sconosciuto")) || 
+					(lap.getModel_number().equals((Object)lap.getAsin() )&& real_cont>800) )   ) 
 			{
 				switch(cont){
 					case 1: userAgent="Mozilla"; 
@@ -97,6 +96,7 @@ public class LinksModels {
 					case 4: userAgent="Opera";
 					case 5: userAgent="Camino";
 					case 6: userAgent="Chrome";
+					case 7: userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/601.6.17 (KHTML, like Gecko)";
 					
 					default : userAgent="Mozilla";
 				}
@@ -116,11 +116,12 @@ public class LinksModels {
 				System.out.println("sono entrato al "+real_cont);
 				
 				TimeUnit.SECONDS.sleep(3);
-				if(cont == 6)
+				if(cont == 7)
 					cont = 0;
 			}
-			//System.out.println(cont);
 			
+			//System.out.println(cont);
+			RetrieveReview.retrieve(lap.getLink(), 100);   //for testing retrieve
 		}
 		
 	}
