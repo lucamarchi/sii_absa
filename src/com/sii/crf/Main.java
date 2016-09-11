@@ -53,7 +53,7 @@ import cc.mallet.util.Randoms;
 public class Main {
 	
 	final static String DATA_DIR = "/Users/luca/Desktop/data/";
-	final static int max_reviews = 100;
+	final static int max_reviews = 25;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
 		/*SentenceDAO dao = new SentenceDAOImplementation();
@@ -71,7 +71,7 @@ public class Main {
 			System.out.println("Frasi con label: "+i+",su totale: "+sentenceList.size());
 		} */
 		
-	//RetrieveReview.retrieve("https://www.amazon.com/Lenovo-Y700-GeForce-Windows-80NV0026US/dp/B014MIBR7K/ref=lp_13896615011_1_14?s=pc&ie=UTF8&qid=1473606227&sr=1-14", 100);
+	//retrieveReviews("https://www.amazon.com/Acer-Aspire-NVIDIA-Windows-E5-575G-53VG/dp/B01DT4A2R4/ref=lp_13896615011_1_1?s=pc&ie=UTF8&qid=1473630725&sr=1-1");
 		LinksModels.collectModelIDs();
 		DataSource.getInstance().closeDb();
 	}
@@ -85,8 +85,11 @@ public class Main {
 		return lap;	
 	}
 	
-	public static List<String> retrieveReviews(String url) throws IOException{
-		return RetrieveReview.retrieve(url, max_reviews);
+	public static List<String> retrieveReviews(String url) throws IOException, InterruptedException{
+		List<String> reviews = RetrieveReview.retrieve(url, max_reviews);
+		if (reviews.isEmpty())
+			System.out.println("Doesn' t exist any review for this item !  :/");
+		return reviews;
 	}
 	
 	public static void prova(String[] args) throws IOException {

@@ -90,7 +90,7 @@ public class LinksModels {
 			if(lap.getAsin() == null)
 				lap.setAsin("sconosciuto");
 			if(((lap.getAsin().equals((Object)"sconosciuto")) || 
-					(lap.getModel_number().equals((Object)lap.getAsin() ) && real_cont>2935) )   ) 
+					(lap.getModel_number().equals((Object)lap.getAsin() ) && real_cont>0) )   ) 
 			{
 				switch(cont){
 					case 1: userAgent="Mozilla"; 
@@ -117,8 +117,8 @@ public class LinksModels {
 				else{
 					lap.setAsin("NOT FOUND");
 					System.out.println("ASIN not found");
-					if(LinksModels.asinFROMurl(lap) != null)
-						lap.setAsin(LinksModels.asinFROMurl(lap));
+					if(LinksModels.asinFROMurl(lap.getLink()) != null)
+						lap.setAsin(LinksModels.asinFROMurl(lap.getLink()));
 				}
 				LaptopDAO.update(lap);
 				System.out.println("sono entrato al "+real_cont);
@@ -129,7 +129,7 @@ public class LinksModels {
 			}
 			
 			//System.out.println(cont);
-		//	RetrieveReview.retrieve(lap.getLink(), 100);   //for testing retrieve
+			RetrieveReview.retrieve(lap.getLink(), 25);   //for testing retrieve
 		}
 		
 	}
@@ -186,9 +186,9 @@ public class LinksModels {
 	}
 	
 	
-	private static String asinFROMurl(Laptop lap){
+	static String asinFROMurl(String url){
 		String asin = null;
-		String words[]=lap.getLink().split("/");
+		String words[]=url.split("/");
 		boolean next = false;
 		for (int i = 0; i < words.length; i++){
 			if(next){
