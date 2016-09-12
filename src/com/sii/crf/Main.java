@@ -13,6 +13,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import com.sii.crf.controller.InsertController;
+import com.sii.crf.controller.ReviewsController;
 import com.sii.crf.controller.StatisticsController;
 import com.sii.crf.mallet.Classify;
 import com.sii.crf.mallet.EvaluateClassifier;
@@ -56,7 +57,7 @@ public class Main {
 	final static String DATA_DIR = "/Users/luca/Desktop/data/";
 	final static int max_reviews = 25;
 	
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException, InterruptedException{
 		/*ImportData importer = new ImportData();
         InstanceList instances = importer.readDirectory(new File("/Users/luca/Desktop/data"));
         ClassifierTrainer maxentTrainer = new MaxEntTrainer();
@@ -78,8 +79,28 @@ public class Main {
 		//sentencesString.add("This computer is really good");
 		//sentencesString.add("The battery of this laptop is a shit.");
 		//ClassifyController.createInput(sentencesString);
-		TrainCRF crf = new TrainCRF("/Users/luca/Desktop/data/classify/eva/evaluation.txt", "/Users/luca/Desktop/data/classify/in/input.txt");
-	
+		//TrainCRF crf = new TrainCRF("/Users/luca/Desktop/data/classify/eva/evaluation.txt", "/Users/luca/Desktop/data/classify/in/input.txt");
+		
+		
+		List<String> reviews = ReviewsController.getReviewsByAsin("B01606M7VM");
+		ImportData importer = new ImportData();
+        InstanceList instances = importer.readDirectory(new File("/Users/luca/Desktop/data"));
+        ClassifierTrainer maxentTrainer = new MaxEntTrainer();
+        Classify classifier = new Classify(instances, maxentTrainer);
+        List<String> strings = new ArrayList<String>();
+        strings.add("This computer is ok. The battery is a shit.");
+        System.out.println("----------------------------------");
+        for (int i=0; i<reviews.size(); i++) {
+        	System.out.println("-------------------- reviews "+ i + "--------------");
+        	System.out.println(reviews.get(i));
+        	File ne = FileIO.createFileTxt(reviews.get(i));
+        	try {
+        		classifier.printLabelings(ne);
+        	} catch (Exception e) {
+        		//TODO
+        	}
+        }
+	}	
 	
 	public static void prova(String[] args) throws IOException {
 		

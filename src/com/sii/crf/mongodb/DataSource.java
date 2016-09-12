@@ -5,7 +5,7 @@ import com.mongodb.client.MongoDatabase;
 
 public class DataSource {
 	
-	private final static String DB_NAME = "db_sii2";  //nel codice originale è db_sii
+	private final static String DB_NAME = "db_sii";  //nel codice originale è db_sii
 	private MongoClient mongoClient;
 	private static DataSource instance = null;
 	

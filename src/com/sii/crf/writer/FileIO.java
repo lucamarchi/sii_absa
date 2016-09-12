@@ -39,10 +39,10 @@ public class FileIO {
 		}
 	}
 	
-	protected static File createFileTxtHelper(List<String> sentences) {
+	public static File createFileTxtHelper(List<String> sentences) {
 		File tmp = new File(DATA_DIR);
 		tmp.mkdirs();
-		File file = new File(tmp.getAbsolutePath(), "input"+sentences.size()+".txt");
+		File file = new File(tmp.getAbsolutePath(), "input"+sentences.hashCode()+".txt");
 		try {
 		if (file.createNewFile()) {
 				BufferedWriter writer = null;
@@ -63,8 +63,12 @@ public class FileIO {
 	
 	public static File createFileTxt(String string) {
 		List<String> sentences = new ArrayList<String>();
-		String[] tmp = string.split("[.?!:;]");
+		String[] tmp = string.split("[.?!;]");
 		for (String s : tmp) {
+			while (s.startsWith(" ")) {
+				s = s.substring(1);
+			}
+			s = s + ".";
 			sentences.add(s);
 		}
 		File f = createFileTxtHelper(sentences);

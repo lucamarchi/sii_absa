@@ -40,7 +40,7 @@ public class Classify {
         return new Trial(classifier, instanceLists[TESTING]);
     }
 	
-	public void printLabelings(File file) throws IOException {
+	public void printLabelings(File file) throws Exception {
         CsvIterator reader = new CsvIterator(new FileReader(file), "(\\w+)\\s+(\\w+)\\s+(.*)", 3, 2, 1);                                                                                  
         Iterator instances = this.classifier.getInstancePipe().newIteratorFrom(reader);                                                                
         while (instances.hasNext()) {
