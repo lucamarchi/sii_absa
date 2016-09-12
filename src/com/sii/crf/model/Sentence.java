@@ -55,8 +55,10 @@ public class Sentence {
 	public String toString() {
 		String description = "------------ Sentence --------------- \n";
 		description += "Text: "+ this.getText() + "\n";
-		for (int i=0; i<this.getOpinions().size(); i++) {
-			description += this.opinions.get(i).toString();
+		if (this.getOpinions() != null) {
+			for (int i=0; i<this.getOpinions().size(); i++) {
+				description += this.opinions.get(i).toString();
+			}
 		}
 		if (this.getTokens() != null) {
 			description += "[Tokens= ";

@@ -41,6 +41,12 @@ public class Labelling {
 						}
 					}
 				}
+			} 
+			
+		}
+		for (Token t : tokenList) {
+			if (t.getPos().equals("NN") && t.getLabel() == null) {
+				t.setLabel("FH");
 			}
 		}
 		for (Token t : tokenList) {

@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.sii.crf.controller.ClassifyController;
 import com.sii.crf.controller.InsertController;
 import com.sii.crf.controller.StatisticsController;
 import com.sii.crf.mallet.Classify;
 import com.sii.crf.mallet.EvaluateClassifier;
 import com.sii.crf.mallet.ImportData;
+import com.sii.crf.mallet.TrainCRF;
 import com.sii.crf.model.Dependency;
 import com.sii.crf.model.Opinion;
 import com.sii.crf.model.Sentence;
@@ -46,23 +48,31 @@ public class Main {
 	
 	final static String DATA_DIR = "/Users/luca/Desktop/data/";
 	
-	public static void main(String[] args) {
-		SentenceDAO dao = new SentenceDAOImplementation();
-		List<Sentence> sentenceList = dao.findAll();
-		int i = 0;
-		for (Sentence s : sentenceList) {
-			Sentence x = Labelling.getLabel(s);
-			for (Token t : s.getTokens()) {
-				if (t.getLabel().equals("FH")) {
-					i++;
-					System.out.println(x);
-				}
-				break;
-			}
-			System.out.println("Frasi con label: "+i+",su totale: "+sentenceList.size());
-		}
-	
+	public static void main(String[] args) throws IOException{
+		/*ImportData importer = new ImportData();
+        InstanceList instances = importer.readDirectory(new File("/Users/luca/Desktop/data"));
+        ClassifierTrainer maxentTrainer = new MaxEntTrainer();
+        Classify classifier = new Classify(instances, maxentTrainer);
+        List<String> sentences = new ArrayList<String>();
+        sentences.add("This computer smells of shit");
+        sentences.add("The memory is little");
+        File ne = FileIO.createFileTxt(sentences);
+        classifier.printLabelings(ne);*/
+		//File i = FileIO.createEvaluationModel();
+		//ImportData data = new ImportData();
+		//InstanceList instancesTrain = data.readDirectory(new File("/Users/luca/Desktop/data/classify/eva"));
+		//InstanceList instancesTesting = data.readDirectory(new File("/Users/luca/Desktop/data/classify/in"));
+		//TrainCRF crf = new TrainCRF("/Users/luca/Desktop/data/evaluation.txt", "/Users/luca/Desktop/data/evainput.txt");
+		//TrainCRF.run(instancesTrain, instancesTesting);
+		//InsertController.LabelInsert();
+		//FileIO.createEvaluationModel();
+		//List<String> sentencesString = new ArrayList<String>();
+		//sentencesString.add("This computer is really good");
+		//sentencesString.add("The battery of this laptop is a shit.");
+		//ClassifyController.createInput(sentencesString);
+		TrainCRF crf = new TrainCRF("/Users/luca/Desktop/data/classify/eva/evaluation.txt", "/Users/luca/Desktop/data/classify/in/input.txt");
 	}
+	
 	
 	public static void prova(String[] args) throws IOException {
 		

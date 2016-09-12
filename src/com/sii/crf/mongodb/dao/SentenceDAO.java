@@ -11,4 +11,6 @@ public interface SentenceDAO {
 	public boolean insertPars(Sentence sentence);
 	public List<Sentence> findAll();
 	public boolean insert(Sentence sentence);
+	public List<Sentence> findAllFinal();
+	public boolean insertFinal(Sentence sentence);
 }
