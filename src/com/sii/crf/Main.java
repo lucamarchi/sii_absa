@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.sii.crf.controller.ClassifyController;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import com.sii.crf.controller.InsertController;
 import com.sii.crf.controller.StatisticsController;
 import com.sii.crf.mallet.Classify;
@@ -20,12 +22,17 @@ import com.sii.crf.model.Dependency;
 import com.sii.crf.model.Opinion;
 import com.sii.crf.model.Sentence;
 import com.sii.crf.model.Token;
+import com.sii.crf.mongodb.DataSource;
+import com.sii.crf.mongodb.dao.LaptopDAO;
 import com.sii.crf.mongodb.dao.SentenceDAO;
 import com.sii.crf.mongodb.dao.SentenceDAOImplementation;
 import com.sii.crf.nlpclient.Labelling;
 import com.sii.crf.nlpclient.NLPClient;
 import com.sii.crf.parser.ParserXML;
 import com.sii.crf.writer.FileIO;
+import com.sii.input.Laptop;
+import com.sii.input.LinksModels;
+import com.sii.input.RetrieveReview;
 
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
@@ -47,6 +54,7 @@ import cc.mallet.util.Randoms;
 public class Main {
 	
 	final static String DATA_DIR = "/Users/luca/Desktop/data/";
+	final static int max_reviews = 25;
 	
 	public static void main(String[] args) throws IOException{
 		/*ImportData importer = new ImportData();
@@ -71,7 +79,6 @@ public class Main {
 		//sentencesString.add("The battery of this laptop is a shit.");
 		//ClassifyController.createInput(sentencesString);
 		TrainCRF crf = new TrainCRF("/Users/luca/Desktop/data/classify/eva/evaluation.txt", "/Users/luca/Desktop/data/classify/in/input.txt");
-	}
 	
 	
 	public static void prova(String[] args) throws IOException {
@@ -124,7 +131,7 @@ public class Main {
         int num = 10;
         EvaluateClassifier.evaluateDataClassify(instances,10);
         
-        
+   // -------------------------------------------------------------------------------------------------------     
         // QUESTA PARTE SOTTO E' ZOZZUME CHE DEVO SISTEMA BENE
         
         // ------------------------ SCRITTURA FILE UNO PER RIGA, ABBOZZO DI MODEL PER CRF ----------------------
