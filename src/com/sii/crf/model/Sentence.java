@@ -9,7 +9,9 @@ public class Sentence {
 	private String id;
 	private String text;
 	private List<Opinion> opinions;
-	
+	private List<Token> tokens;
+	private List<Dependency> dependencies;
+
 	public String getId() {
 		return this.id;
 	}
@@ -34,11 +36,43 @@ public class Sentence {
 		this.opinions = opinions;
 	}
 	
+	public List<Token> getTokens() {
+		return tokens;
+	}
+
+	public void setTokens(List<Token> tokens) {
+		this.tokens = tokens;
+	}
+	
+	public List<Dependency> getDependecies() {
+		return this.dependencies;
+	}
+
+	public void setDependencies(List<Dependency> dependencies) {
+		this.dependencies = dependencies;
+	}
+	
 	public String toString() {
 		String description = "------------ Sentence --------------- \n";
 		description += "Text: "+ this.getText() + "\n";
-		for (int i=0; i<this.getOpinions().size(); i++) {
-			description += this.opinions.get(i).toString();
+		if (this.getOpinions() != null) {
+			for (int i=0; i<this.getOpinions().size(); i++) {
+				description += this.opinions.get(i).toString();
+			}
+		}
+		if (this.getTokens() != null) {
+			description += "[Tokens= ";
+			for (int j=0; j<this.getTokens().size(); j++) {
+				description += this.tokens.get(j).toString();
+			}
+			description += "]\n";
+		}
+		if (this.getDependecies() != null) {
+			description += "[Dependencies= ";
+			for (int j=0; j<this.getDependecies().size(); j++) {
+				description += this.dependencies.get(j).toString();
+			}
+			description += "]\n";
 		}
 		return description;
 	}

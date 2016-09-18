@@ -7,7 +7,10 @@ import com.mongodb.client.FindIterable;
 import com.sii.crf.model.Sentence;
 
 public interface SentenceDAO {
-	
+	public List<Sentence> findAllPars();
+	public boolean insertPars(Sentence sentence);
 	public List<Sentence> findAll();
 	public boolean insert(Sentence sentence);
+	public List<Sentence> findAllFinal();
+	public boolean insertFinal(Sentence sentence);
 }
