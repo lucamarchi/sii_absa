@@ -44,11 +44,15 @@ public class Classify {
         CsvIterator reader = new CsvIterator(new FileReader(file), "(\\w+)\\s+(\\w+)\\s+(.*)", 3, 2, 1);                                                                                  
         Iterator instances = this.classifier.getInstancePipe().newIteratorFrom(reader);                                                                
         while (instances.hasNext()) {
-            Labeling labeling = this.classifier.classify(instances.next()).getLabeling();
-            for (int rank = 0; rank < labeling.numLocations(); rank++){
-                System.out.print(labeling.getLabelAtRank(rank) + ":" +  labeling.getValueAtRank(rank) + " ");
+            try{
+            	Labeling labeling = this.classifier.classify(instances.next()).getLabeling();
+	            for (int rank = 0; rank < labeling.numLocations(); rank++){
+	                System.out.print(labeling.getLabelAtRank(rank) + ":" +  labeling.getValueAtRank(rank) + " ");
+	            }
+	            System.out.println();
+            } catch (Exception e ) {
+            	e.printStackTrace();
             }
-            System.out.println();
         }
     }
 	

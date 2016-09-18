@@ -29,10 +29,6 @@ public class TrainCRF {
 		pipes.add(new TokenTextCharSuffix("C1=", 1));
 		pipes.add(new TokenTextCharSuffix("C2=", 2));
 		pipes.add(new TokenTextCharSuffix("C3=", 3));
-		pipes.add(new RegexMatches("CAPITALIZED", Pattern.compile("^\\p{Lu}.*")));
-		pipes.add(new RegexMatches("STARTSNUMBER", Pattern.compile("^[0-9].*")));
-		pipes.add(new RegexMatches("HYPHENATED", Pattern.compile(".*\\-.*")));
-		pipes.add(new RegexMatches("DOLLARSIGN", Pattern.compile(".*\\$.*")));
 		pipes.add(new TokenFirstPosition("FIRSTTOKEN"));
 		pipes.add(new TokenSequence2FeatureVectorSequence());
 
@@ -63,6 +59,9 @@ public class TrainCRF {
 		trainer.addEvaluator(new PerClassAccuracyEvaluator(testingInstances, "testing"));
 		trainer.addEvaluator(new TokenAccuracyEvaluator(testingInstances, "testing"));
 		trainer.train(trainingInstances);
+		ViterbiWriter w = new ViterbiWriter("/Users/luca/Desktop/data/output.txt", testingInstances, null);
+		w.evaluateInstanceList(trainer, testingInstances, null);
+		
 	}
 	
 	

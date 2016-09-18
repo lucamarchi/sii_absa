@@ -1,55 +1,20 @@
 package com.sii.crf;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import com.sii.crf.controller.InsertController;
-import com.sii.crf.controller.ReviewsController;
+import com.sii.crf.controller.OutputController;
 import com.sii.crf.controller.StatisticsController;
-import com.sii.crf.mallet.Classify;
 import com.sii.crf.mallet.EvaluateClassifier;
 import com.sii.crf.mallet.ImportData;
-import com.sii.crf.mallet.TrainCRF;
-import com.sii.crf.model.Dependency;
-import com.sii.crf.model.Opinion;
 import com.sii.crf.model.Sentence;
-import com.sii.crf.model.Token;
-import com.sii.crf.mongodb.DataSource;
-import com.sii.crf.mongodb.dao.LaptopDAO;
 import com.sii.crf.mongodb.dao.SentenceDAO;
 import com.sii.crf.mongodb.dao.SentenceDAOImplementation;
-import com.sii.crf.nlpclient.Labelling;
-import com.sii.crf.nlpclient.NLPClient;
-import com.sii.crf.parser.ParserXML;
 import com.sii.crf.writer.FileIO;
-import com.sii.input.Laptop;
-import com.sii.input.LinksModels;
-import com.sii.input.RetrieveReview;
 
-import cc.mallet.classify.Classifier;
-import cc.mallet.classify.ClassifierTrainer;
-import cc.mallet.classify.DecisionTreeTrainer;
-import cc.mallet.classify.MaxEntTrainer;
-import cc.mallet.classify.NaiveBayesTrainer;
-import cc.mallet.classify.Trial;
-import cc.mallet.pipe.CharSequence2TokenSequence;
-import cc.mallet.pipe.CharSequenceLowercase;
-import cc.mallet.pipe.Pipe;
-import cc.mallet.pipe.SerialPipes;
-import cc.mallet.pipe.TokenSequence2FeatureSequence;
-import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import cc.mallet.types.Labeling;
-import cc.mallet.util.Randoms;
 
 
 public class Main {
@@ -57,52 +22,7 @@ public class Main {
 	final static String DATA_DIR = "/Users/luca/Desktop/data/";
 	final static int max_reviews = 25;
 	
-	public static void main(String[] args) throws IOException, InterruptedException{
-		/*ImportData importer = new ImportData();
-        InstanceList instances = importer.readDirectory(new File("/Users/luca/Desktop/data"));
-        ClassifierTrainer maxentTrainer = new MaxEntTrainer();
-        Classify classifier = new Classify(instances, maxentTrainer);
-        List<String> sentences = new ArrayList<String>();
-        sentences.add("This computer smells of shit");
-        sentences.add("The memory is little");
-        File ne = FileIO.createFileTxt(sentences);
-        classifier.printLabelings(ne);*/
-		//File i = FileIO.createEvaluationModel();
-		//ImportData data = new ImportData();
-		//InstanceList instancesTrain = data.readDirectory(new File("/Users/luca/Desktop/data/classify/eva"));
-		//InstanceList instancesTesting = data.readDirectory(new File("/Users/luca/Desktop/data/classify/in"));
-		//TrainCRF crf = new TrainCRF("/Users/luca/Desktop/data/evaluation.txt", "/Users/luca/Desktop/data/evainput.txt");
-		//TrainCRF.run(instancesTrain, instancesTesting);
-		//InsertController.LabelInsert();
-		//FileIO.createEvaluationModel();
-		//List<String> sentencesString = new ArrayList<String>();
-		//sentencesString.add("This computer is really good");
-		//sentencesString.add("The battery of this laptop is a shit.");
-		//ClassifyController.createInput(sentencesString);
-		//TrainCRF crf = new TrainCRF("/Users/luca/Desktop/data/classify/eva/evaluation.txt", "/Users/luca/Desktop/data/classify/in/input.txt");
-		
-		
-		List<String> reviews = ReviewsController.getReviewsByAsin("B01606M7VM");
-		ImportData importer = new ImportData();
-        InstanceList instances = importer.readDirectory(new File("/Users/luca/Desktop/data"));
-        ClassifierTrainer maxentTrainer = new MaxEntTrainer();
-        Classify classifier = new Classify(instances, maxentTrainer);
-        List<String> strings = new ArrayList<String>();
-        strings.add("This computer is ok. The battery is a shit.");
-        System.out.println("----------------------------------");
-        for (int i=0; i<reviews.size(); i++) {
-        	System.out.println("-------------------- reviews "+ i + "--------------");
-        	System.out.println(reviews.get(i));
-        	File ne = FileIO.createFileTxt(reviews.get(i));
-        	try {
-        		classifier.printLabelings(ne);
-        	} catch (Exception e) {
-        		//TODO
-        	}
-        }
-	}	
-	
-	public static void prova(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 		
 		
 		/*	InsertController.parseAndInsert() prende le singole sentences dall'xml 
@@ -150,69 +70,14 @@ public class Main {
          * 	e visualizza i valori medi di accuracy e f1.
          */
         int num = 10;
-        EvaluateClassifier.evaluateDataClassify(instances,10);
+        EvaluateClassifier.evaluateDataClassify(instances,num);
         
-   // -------------------------------------------------------------------------------------------------------     
-        // QUESTA PARTE SOTTO E' ZOZZUME CHE DEVO SISTEMA BENE
+        /*  Fa il retrieve delle review corrispondenti al modello indicato con il codice asin
+         *  e mostra l'output; avviene creazione dell'evaluation model e classificazione.
+         */
         
-        // ------------------------ SCRITTURA FILE UNO PER RIGA, ABBOZZO DI MODEL PER CRF ----------------------
-		/*SentenceDAO dao = new SentenceDAOImplementation();
-		List<Sentence> sentences = dao.findAll();
-		sentences.size();
-		for (Sentence s : sentences) {
-			System.out.println(s.toString());
-		}
-		File tmp = new File(DATA_DIR);
-		tmp.mkdirs();
-		File file = new File(DATA_DIR, "sample.txt");
-		file.createNewFile();
-		BufferedWriter writer = null;
-		writer = new BufferedWriter(new FileWriter(file));
-		for(int i=0; i<sentences.size(); i++) {
-			Sentence currSentence = sentences.get(i);
-			try {
-					for (int j=0;j<currSentence.getTokens().size(); j++) {
-						writer.write(currSentence.getTokens().get(j).getOriginalText()+"\t"+currSentence.getTokens().get(j).getPos());
-						writer.newLine();
-					}
-					writer.newLine();
-					
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-		writer.close();
-		*/
-		/*List<Sentence> sentences = ParserXML.parseXMLFileToList();
-		SentenceDAO dao = new SentenceDAOImplementation();
-		for (Sentence sentence : sentences) {
-			dao.insert(sentence);
-		}
-		File tmp = new File(DATA_DIR);
-		tmp.mkdirs();
-		SentenceDAO dao = new SentenceDAOImplementation();
-		List<Sentence> sentences = dao.findAll();
-		for(int i=0; i<sentences.size(); i++) {
-			Sentence currSentence = sentences.get(i);
-			String new_dir_path = DATA_DIR + currSentence.getOpinions().get(0).getPolarity();
-			File new_dir = new File(new_dir_path);
-			new_dir.mkdirs();
-			File file = new File(new_dir.getAbsolutePath(), i + ".txt");
-			try {
-				if (file.createNewFile()) {
-					BufferedWriter writer = null;
-					writer = new BufferedWriter(new FileWriter(file));
-		            writer.write(currSentence.getText());
-					writer.close();
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}*/
+        OutputController o = new OutputController("B01GFYP8II");
+		o.start();
         
 	}
 	
